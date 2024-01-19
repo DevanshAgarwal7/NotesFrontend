@@ -1,1 +1,81 @@
-<p>signup works!</p>
+<div class="signup_component">
+    <div class="navbar">
+      <app-navbar></app-navbar>
+    </div>
+    <div class="body">
+      <img class="background_img" [src]="bgImage" alt="background" />
+      <div class="container-md signup_container">
+        <div class="container gridcontainer">
+          <div class="row gridrow1">
+            <div class="col-sm-5 gridcolumn1">
+              <div class="logo">
+                <img class="logo_img" [src]="signupLogo" alt="Design_Logo" />
+              </div>
+            </div>
+            <div class="col-sm-7 gridcolumn2">
+              <div class="input_div">
+                <div class="signin_div">
+                  <a routerLink="">Already have account?</a>
+                </div>
+                <div class="formdiv">
+                  <form class="needs-validation" (ngSubmit)="handleSubmit()">
+                    <div class="row mb-3">
+                      <label for="inputEmail" class="col-sm-2 col-form-label">Email <span class="form_mandatory_mark">*</span></label>
+                      <div class="col-sm-10">
+                        <div class="input-group has-validation">
+                          <input type="text" class="form-control" name="userInputEmail" [(ngModel)]="userEmail" id="inputEmail" aria-describedby="inputGroupPrepend" (blur)="validateEmail()" [readonly]="fieldReadOnlyStatus" required><span><button mat-raised-button color="accent" [disabled]="disableSendOTPOButton" (click)="verifyEmail()">Send OTP</button></span>
+                          <div class="invalid-feedback">
+                            Please choose a username.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mb-3" *ngIf="showOtpField">
+                      <label for="inputOTP" class="col-sm-2 col-form-label">OTP <span class="form_mandatory_mark">*</span></label>
+                      <div class="col-sm-10">
+                        <input type="password" class="form-control" name="otp" [readOnly]="fieldReadOnlyStatus" [(ngModel)]="inputtedOTP" id="inputOTP" class="inputOtp"><span><button mat-raised-button color="accent" (click)="isOTPMatched()" [hidden]="hideVerifyButton">Verify OTP</button></span>
+                        <ng-container>
+                          <span *ngIf="validMessageStatus" style="color: green;"> Verified ✅✅</span>
+                          <span *ngIf="notValidMessageStatus" style="color: red;"> Not Verified ❌❌</span>
+                        </ng-container>
+                      </div>
+                    </div>
+                    <ng-container *ngIf="validMessageStatus">
+                      <div class="row mb-3">
+                        <label for="inputfirstname" class="col-sm-2 col-form-label" style="font-size: small;">First Name<span class="form_mandatory_mark">*</span></label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="inputlastname">
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="inputlastname" class="col-sm-2 col-form-label" style="font-size: small;">Last Name<span class="form_mandatory_mark">*</span></label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="inputlastname">
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="inputpassword" class="col-sm-2 col-form-label">Password <span class="form_mandatory_mark">*</span></label>
+                        <div class="col-sm-10">
+                          <input type="password" class="form-control" id="inputpassword">
+                        </div>
+                      </div>
+                    </ng-container>
+                    
+                    <ng-container>
+                      <div class="form_buttons">
+                        <button type="submit" class="btn btn-warning _button">Sign in</button>
+                        <button type="reset" class="btn btn-warning _button">Reset</button>
+                      </div>
+                    </ng-container>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="footer">
+      <app-footer></app-footer>
+    </div> -->
+  </div>

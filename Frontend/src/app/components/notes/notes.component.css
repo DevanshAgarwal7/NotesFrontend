@@ -1,0 +1,53 @@
+.notescomponent{
+    margin: 0;
+    padding: 0;
+}
+.flexbox-container{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: auto;
+    padding: 40px 70px;
+    /* background-color: pink; */
+    justify-content: space-between;
+    gap: 20px;
+
+    flex-wrap: wrap;
+}
+.flexitem{
+    min-width: 270px;
+    height: 200px;
+    padding: 10px 20px;
+    box-shadow: #ffc107 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+}
+.note-title{
+    width: 100%;
+    height: 10%;;
+}
+.note-description{
+    width: 100%;
+    height: 60%;
+}
+.action-buttons{
+    width: 100%;
+    height: 10%;
+}
+.flexitem1{
+    /* background-color: green; */
+    border: 2px;
+}
+.flexitem2{
+    background-color: red;
+}
+.flexitem3{
+    background-color: yellow;
+}
+.flexitem4{
+    background-color: black;
+}
+@media (max-width: 697px){
+    .flexbox-container{
+        justify-content: center;
+        align-items: center;
+    }
+}

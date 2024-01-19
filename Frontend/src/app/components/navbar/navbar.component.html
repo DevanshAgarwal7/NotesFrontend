@@ -1,1 +1,36 @@
-<p>navbar works!</p>
+<div class="navbarcomponent">
+    <div class="navbar">
+        <nav class="navbar fixed-top navbar-light bg-dark">
+            <div class="container-fluid">
+              <div class="content">
+                <h3>Your Own Notes</h3>
+              </div>
+              <ng-container *ngIf="navbarCustomProperties.showDetails">
+                <div class="flexbox_container">
+                  <div class="item flexbox_item1">
+                    <mat-slide-toggle [color]="color"><b class="toggle_text">Dark Mode</b></mat-slide-toggle>
+                  </div>
+                  <div class="item flexbox_item2">
+                    <div class="user_logo" (click)="toggle()">
+                      <div class="inside_logo">
+                        <h4>A</h4>
+                      </div>
+                    </div>
+                  </div>
+                  <ng-container *ngIf="showToggle">
+                    <div class="toggle_list">
+                      <ul class="list">
+                        <li class="list_item"><a routerLink="profile">Profile</a></li>
+                        <li class="list_item"><a [href]="about_developer" target="_blank">Developer</a></li>
+                        <li class="list_item"><a routerLink="">Logout</a></li>
+                      </ul>
+                    </div>
+                  </ng-container>
+                  
+                </div>
+              </ng-container>
+              
+            </div>
+        </nav>
+    </div>
+</div>

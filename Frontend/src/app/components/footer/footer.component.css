@@ -1,0 +1,37 @@
+.footer_component{
+    width: 100vw;
+}
+.footer{
+    width: 100vw;
+    height: 12vh;
+    background-color: black;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.flexbox_container1{
+    width: auto;
+    height: 10vh;
+    /* background-color: antiquewhite; */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.flexbox1_item1{
+    width: auto;
+    height: 5vh;
+    /* background-color: red; */
+    padding: 7px 3px;
+}
+/* @media (max-width: 999px){
+    .flexbox_container1{
+        width: 50vw;
+        height: 10vh;
+    }
+    .flexbox1_item1{
+        width: 36vw;
+        height: 5vh;
+    }
+} */

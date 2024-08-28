@@ -1,0 +1,14 @@
+<div class="specific_component">
+    <div class="dialogbox" *ngIf="note">
+        <h1 mat-dialog-title>Title:<span><input type="text" [(ngModel)]="note.noteTitle" /></span></h1>
+        <div mat-dialog-content>
+          <textarea [(ngModel)]="note.content" class="form-control" rows="5"></textarea>
+        </div>
+        <div mat-dialog-actions>
+          <button mat-button mat-dialog-close  (click)="closeDialog('download')">Download</button>
+          <button mat-button mat-dialog-close cdkFocusInitial (click)="closeDialog('close')">Cancel</button>
+          <button mat-button mat-dialog-close (click)="closeDialog('update')">Update</button>
+        </div>
+
+    </div>
+</div>

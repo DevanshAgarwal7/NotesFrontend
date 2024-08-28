@@ -2,7 +2,10 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { environment } from 'src/environment/environment';
-import Swal from 'sweetalert2'
+import { BannerMessage } from 'src/model/banner-message';
+import { ILoginCredentials } from 'src/model/ilogin-credentials';
+import { setUserDetails, setUserNotes, setLoggedInStatus } from 'src/model/logged-in';
+import { UserService } from 'src/app/service/user.service';
 
 @Component({
   selector: 'app-login',
@@ -12,64 +15,60 @@ import Swal from 'sweetalert2'
 export class LoginComponent {
 
   loginFormControl = new FormGroup({
-    userEmail: new FormControl(null,[Validators.required, Validators.email]),
+    userEmail: new FormControl(null,[Validators.required, Validators.nullValidator, Validators.email]),
     password: new FormControl(null, [Validators.required,Validators.minLength(7)])
   })
-
-  get userEmailvalidator(){
-    return this.loginFormControl.get('userEmail');
-  }
 
   get userPasswordValidator(){
     return this.loginFormControl.get('password');
   }
 
   bgImage = environment.images.bgImage;
-  loginLogo = environment.images.loginLogo
-  constructor(private router: Router){}
+  loginLogo = environment.images.loginLogo;
+  isEmailValid: boolean = true;
+  private unauthorised = environment.errors.unauthorised;
+  private bannerMessage: BannerMessage | undefined;
 
-  handleSubmit(){
-    console.log(this.loginFormControl.value);
-    if( this.loginFormControl.value.userEmail != null 
-      && this.loginFormControl.value.userEmail === "deva@gmail.com"){
-      this.showSuccessAlert();
+  constructor(private router: Router, private userService: UserService){
+    this.bannerMessage = new BannerMessage();
+  }
+
+  validateEmail(){
+    const regX = /^([a-zA-Z0-9\.-]{1,})@([a-zA-Z0-9-]{1,})\.([a-z]{3,10})(\.[a-z]{2,10})?$/;
+    const userEmail = this.loginFormControl.value.userEmail; 
+    if(userEmail && !regX.test(userEmail)){
+      this.isEmailValid = true;
     }
     else{
-      this.showErrorAlert();
+      this.isEmailValid = false;
+    }
+  }
+
+  handleSubmit(){
+    if(!this.isEmailValid){
+      const userInfo: ILoginCredentials = {
+        userEmail: this.loginFormControl.value.userEmail,
+        password: this.loginFormControl.value.password
+      }
+      this.userService.getUser(userInfo).subscribe((response)=>{
+        if(response){
+          setUserDetails(response);
+          setLoggedInStatus(true);
+          setTimeout(() => {
+            this.router.navigateByUrl("/notes/u");
+            this.bannerMessage?.getSuccessMessage(environment.success.loginSuccess);
+          }, 1000);   
+        }
+        else{
+          setUserDetails(undefined);
+          setUserNotes(undefined);
+          setLoggedInStatus(false);
+          this.bannerMessage?.showError(this.unauthorised);
+        }
+      })
     }
     
   }
 
-  private showSuccessAlert(){
-    const Toast = Swal.mixin({
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 2000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-      }
-    });
-    Toast.fire({
-      icon: "success",
-      title: "Signed in successfully, Redirecting....",
-      color: "green"
-    }).then(function(){
-      // window.location.href = "notes/u"
-    })
-  }
-
-  private showErrorAlert(){
-    Swal.fire({
-      position: "center",
-      icon: "error",
-      text: "Please Provide Correct Email And Password OR You Are Not Registered With Us.",
-      color: "red",
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true
-    });
-  }
+  
 }

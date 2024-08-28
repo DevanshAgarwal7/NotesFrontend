@@ -1,0 +1,21 @@
+<div class="navbar_details_component">
+    <div class="flexbox_container">
+        <div class="item flexbox_item1">
+        </div>
+        <div class="item flexbox_item2">
+          <div class="user_logo" (click)="toggle()">
+            <div class="inside_logo">
+              <h4>{{characterName}}</h4>
+            </div>
+          </div>
+        </div>
+        <ng-container *ngIf="showToggle">
+          <div class="toggle_list">
+            <ul class="list">
+              <li class="list_item"><mat-icon class="icon">person</mat-icon><a [href]="about_developer" target="_blank">Developer</a></li>
+              <li class="list_item"><mat-icon class="icon">exit_to_app</mat-icon><a (click)="logout()">Logout</a></li>
+            </ul>
+          </div>
+        </ng-container>
+      </div>
+</div>

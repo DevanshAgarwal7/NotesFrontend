@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { environment } from 'src/environment/environment';
-import Swal from 'sweetalert2';
+import { BannerMessage } from 'src/model/banner-message';
+import { UserService } from 'src/app/service/user.service';
+import { ILoginCredentials } from 'src/model/ilogin-credentials';
 
 @Component({
   selector: 'app-forgot-password',
@@ -11,15 +13,27 @@ import Swal from 'sweetalert2';
 })
 export class ForgotPasswordComponent {
 
+  private bannerMessage: BannerMessage | undefined;
+  showOTPField = false;
+  disableOTPButton = true;
+  makeEmailFieldReadOnly = false;
+  disableVerifyButton = true;
+  makeOtpFieldReadOnly = false;
+  showNewPasswordField = false;
+  validMessageStatus = false;
+  isEmailValid = true;
+  errorOTPMessage = true;
+  passwordStatusMessage = false;
+  private actualOtp: any;
+
+  bgImage = environment.images.bgImage;
+  forgotLogo = environment.images.forgotLogo;
+
   changePasswordForm = new FormGroup({
     userEmail: new FormControl(null,[Validators.required, Validators.email]),
-    enteredOTP: new FormControl(null,[Validators.required,Validators.minLength(5), Validators.maxLength(5)]),
-    userNewPassword: new FormControl(null,[Validators.required, Validators.minLength(7)])
+    enteredOTP: new FormControl(null,[Validators.required,Validators.minLength(4), Validators.maxLength(4)]),
+    userNewPassword: new FormControl('',[Validators.required, Validators.minLength(7)])
   })
-
-  get userEmailvalidator(){
-    return this.changePasswordForm.get('userEmail');
-  }
 
   get enteredOTPValidator(){
     return this.changePasswordForm.get('enteredOTP');
@@ -29,96 +43,102 @@ export class ForgotPasswordComponent {
     return this.changePasswordForm.get('userNewPassword');
   }
 
-  showOTPField = false;
-  disableOTPButton = false;
-  makeEmailFieldReadOnly = false;
-  disableVerifyButton = false;
-  makeOtpFieldReadOnly = false;
-  showNewPasswordField = false;
-  newPassword = "";
-  statusMessage = false;
-  isValid = false;
-
-  bgImage = environment.images.bgImage;
-  forgotLogo = environment.images.forgotLogo;
-
-  constructor(private route: Router){}
+  constructor(private router: Router, private userService: UserService){
+    this.bannerMessage = new BannerMessage();
+  }
 
   redirtToSignUp(){
-    this.route.navigateByUrl("signup");
+    this.router.navigateByUrl("signup");
+  }
+
+  validateEmail(){
+    const regX = /^([a-zA-Z0-9\.-]{1,})@([a-zA-Z0-9-]{1,})\.([a-z]{3,10})(\.[a-z]{2,10})?$/;
+    const userEmail = this.changePasswordForm.value.userEmail;
+    if(userEmail && !regX.test(userEmail)){      
+      this.disableOTPButton = true;
+      this.isEmailValid = true;
+    }
+    else{
+      this.disableOTPButton = false;
+      this.isEmailValid = false;
+    }
   }
 
   sendOTP(){
-    
-    if(this.changePasswordForm.value.userEmail != null && this.changePasswordForm.value.userEmail === "deva@gmail.com"){
-      this.showOTPField = true;
-      this.showOTPSendMessage();
-      // this.isValid = true;
+    const email = {
+      userEmail: this.changePasswordForm.value.userEmail
     }
-    else{
-      this.showOTPField = false;
-      this.disableOTPButton = false;
-      this.showError();
-    }
-  }
-  verifyOTP(){
-    
-    if(this.changePasswordForm.value.enteredOTP != null && this.changePasswordForm.value.enteredOTP === "23456"){
-      this.showNewPasswordField = true;
-      this.disableOTPButton = true;
-      this.makeEmailFieldReadOnly = true;
-      this.makeOtpFieldReadOnly = true;
-      this.disableVerifyButton = true;
-      
-    }
-    else{
-      this.showNewPasswordField = false;
-      this.disableOTPButton = false;
-      this.makeEmailFieldReadOnly = false;
-      this.disableVerifyButton = false;
-    }
-  }
-  passwordStatus(){
-    console.log(this.newPassword);
-    if(this.newPassword==="abc@123"){
-      this.isValid = true;
-      this.statusMessage = true
-    }
-    else{
-      this.isValid = false;
-      this.statusMessage = false;
-    }
-    
-  }
-
-  private showOTPSendMessage(){
-    const Toast = Swal.mixin({
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
+    this.userService.forgotpasswordOTPVerification(email).subscribe((response: any) =>{
+      this.actualOtp = response.message;      
+      if(this.actualOtp === null){
+        this.bannerMessage?.showError(environment.errors.unauthorised);
+        setTimeout(() => {
+          this.router.navigateByUrl('');
+        }, 3000);
       }
-    });
-    Toast.fire({
-      icon: "success",
-      title: "OTP Send Successfully.",
-      color: "green"
+      else{
+        this.bannerMessage?.getSuccessMessage(environment.success.OtpSuccess);
+        this.disableOTPButton = true;
+        this.showOTPField = true;
+        this.makeEmailFieldReadOnly = true;
+        this.disableOTPButton = true;
+      }
     })
   }
 
-  private showError(){
-    Swal.fire({
-      position: "center",
-      icon: "error",
-      text: "Please Provide Correct Email OR You Are Not Registered With Us.",
-      color: "red",
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true
-    });
+  verifyOTP(){
+      const enteredOtp: any = this.changePasswordForm.value.enteredOTP;
+      if(enteredOtp && enteredOtp.length == 4){
+        this.disableVerifyButton = false;
+        this.errorOTPMessage = false;
+      }
+      else{
+        this.disableVerifyButton = true;
+        this.errorOTPMessage = true;
+      }
+    }
+
+    verifyUser(){
+      const enteredOtp = this.changePasswordForm.value.enteredOTP;
+      this.errorOTPMessage = false;
+      if(enteredOtp && enteredOtp == this.actualOtp){
+        this.disableVerifyButton = true;
+        this.makeOtpFieldReadOnly = true;
+        this.showNewPasswordField = true;
+        this.validMessageStatus = true;
+      }
+      else{
+        this.disableVerifyButton = false;
+        this.makeOtpFieldReadOnly = false;
+        this.showNewPasswordField = false;
+        this.validMessageStatus = false;
+      }
+    }
+  
+  passwordStatus(){
+    const password: any = this.changePasswordForm.value.userNewPassword
+    if(password && password.length >= 7){
+      this.passwordStatusMessage = true
+    }
+    else{
+      this.passwordStatusMessage = false;
+    }
+    
   }
+
+  submitPassword(){
+    const userNewCredentials = {
+      userEmail: this.changePasswordForm.value.userEmail,
+      password:  this.changePasswordForm.value.userNewPassword
+    }
+    this.userService.forgotpassword(userNewCredentials).subscribe((response: any)=>{
+      if(response && response.message != null){
+        this.bannerMessage?.getSuccessMessage(environment.success.forgotPassword);
+        setTimeout(() => {
+          this.router.navigateByUrl('');
+        }, 3000);
+      }
+    })
+  }
+  
 }

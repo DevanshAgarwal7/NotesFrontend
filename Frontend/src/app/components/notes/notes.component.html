@@ -1,23 +1,60 @@
-<div class="notescomponent">
+<div class="notescomponent" [class.blur-component]="blurBackground">
   <div class="notes">
+    <div class="new-notes">
+      <div class="new-notes-flexbox">
+        <div class="new-notes-flexitem">
+          <button type="button" class="new-notes-flexitem-button-add" (click)="addNote()"><mat-icon class="add-icon">note_add</mat-icon><span class="new-notes-flexitem-add-text">Add Note </span></button>
+        </div>
+      </div>
+    </div>
     <ng-container>
       <div class="flexbox-container">
-        <div class="flexitem flexitem1">
-          <div class="note-title">Title:</div>
-          <hr />
-          <div class="note-description">Descreption:</div>
-          <div class="action-buttons">
-            <div class="delete-button">              
+        <ng-container *ngFor="let item of allNotes">  
+          <div class="flexitem flexitem1">
+            <div class="note-title"><b>Title:</b>
+              <span>
+                <ng-container>
+                  {{ item.noteTitle.length > 25 ? item.noteTitle.substring(0, 25) + '... ' : item.noteTitle }}
+                </ng-container>
+                
+              </span>
+            </div>
+            <hr />
+            <div class="note-description"><b>Descreption:</b>
+              <span>
+                <ng-container>
+                  {{ item.content.length > 74 ? item.content.substring(0, 73) + '... ' : item.content }}
+                  <a *ngIf="item.content.length >= 74" (click)="openEditDialog('500ms', '100ms', item.notesId)" class="read-more-link">Read More</a>
+                </ng-container>
+                
+              </span>
+  
+            </div>
+            <div class="action-buttons">
+              <div class="delete-button action-button-as-flexbox-item">   
+                <mat-icon><span (click)="openEditDialog('500ms', '100ms', item.notesId)">edit</span></mat-icon>
+              </div>
+              <div class="delete-button action-button-as-flexbox-item">   
+                <mat-icon><span (click)="openDeleteDialog('500ms', '100ms', item.notesId)">delete_forever</span></mat-icon>
+              </div>
+              <div class="edittimediv">
+                <b>Edited At:</b>
+                {{ item.editTime }}
+              </div>
             </div>
           </div>
+        </ng-container>
+        
+      </div>
+    </ng-container>
+    <ng-container *ngIf="emptyImage">
+      <div class="no-notes-flexbox">
+        <div class="no-notes-flex-item">
+          <img [src]="emptyNotesImage" class="no-notes-image" alt="No Notes Present">
         </div>
-        <div class="flexitem flexitem2"></div>
-        <div class="flexitem flexitem3"></div>
-        <div class="flexitem flexitem4"></div>
-        <div class="flexitem flexitem1"></div>
-        <div class="flexitem flexitem2"></div>
-        <div class="flexitem flexitem3"></div>
-        <div class="flexitem flexitem4"></div>
+        <div class="no-notes-message">
+          <h4>Please add atleast one note.</h4>
+        </div>
       </div>
     </ng-container>
   </div>

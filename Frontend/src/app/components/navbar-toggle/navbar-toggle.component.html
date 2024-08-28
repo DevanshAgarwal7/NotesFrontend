@@ -1,0 +1,17 @@
+<div class="navbar_toggle_component">
+    <div class="toggle_dot">
+        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+              <mat-icon>person</mat-icon>
+              <span><a [href]="about_Developer" target="_blank" class="developerLink">Developer</a></span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon>exit_to_app</mat-icon>
+              <span (click)="logout()">Logout</span>
+            </button>
+          </mat-menu>
+    </div>
+</div>

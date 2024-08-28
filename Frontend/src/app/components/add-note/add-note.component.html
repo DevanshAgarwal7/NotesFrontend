@@ -1,0 +1,15 @@
+<div class="add-note-component">
+    <div class="dialogbox">
+      <form [formGroup]="addNoteForm" (ngSubmit)="addNote()">
+        <h1 mat-dialog-title><span>Title:<input type="text" name="noteTitle" required="true" formControlName="noteTitle"/></span></h1>
+        <div mat-dialog-content>
+          <textarea class="form-control" rows="5" required="true" name="content" formControlName="content"></textarea>
+        </div>
+        <div mat-dialog-actions>
+          <button mat-button mat-dialog-close cdkFocusInitial (click)="cancel()">Cancel</button>
+          <button type="submit" [disabled]="addNoteForm.invalid" mat-button mat-dialog-close>Add</button>
+        </div>
+      </form>
+
+    </div>
+</div>

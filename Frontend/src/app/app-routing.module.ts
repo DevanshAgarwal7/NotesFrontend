@@ -4,7 +4,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { SignupComponent } from './pages/signup/signup.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { ProfileComponent } from './pages/profile/profile.component';
+import { authGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -13,20 +13,17 @@ const routes: Routes = [
   },
   {
     path: 'signup',
-    component: SignupComponent
+    component: SignupComponent,
   },
   {
     path: 'forgot/password',
-    component: ForgotPasswordComponent
+    component: ForgotPasswordComponent,
   },
   {
     path: 'notes/u',
-    component: DashboardComponent
+    component: DashboardComponent,
+    canActivate: [authGuard]
   },
-  {
-    path: 'profile',
-    component: ProfileComponent
-  }
 ];
 
 @NgModule({

@@ -18,18 +18,24 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonModule} from '@angular/material/button';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import {MatMenuModule} from '@angular/material/menu';
+import { MatDialogModule } from '@angular/material/dialog';
 
 // MaterialUI Modeules Ends
 import { LoginComponent } from './pages/login/login.component';
 import { SignupComponent } from './pages/signup/signup.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { ProfileComponent } from './pages/profile/profile.component';
 import { NotesComponent } from './components/notes/notes.component';
 import { NotesTemplateComponent } from './components/notes-template/notes-template.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { NavbarDetailsComponent } from './components/navbar-details/navbar-details.component';
+import { NavbarToggleComponent } from './components/navbar-toggle/navbar-toggle.component';
+import { SpecificNoteComponent } from './components/specific-note/specific-note.component';
+import { AddNoteComponent } from './components/add-note/add-note.component';
+import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.component';
 
 @NgModule({
   declarations: [
@@ -37,12 +43,16 @@ import { FooterComponent } from './components/footer/footer.component';
     LoginComponent,
     SignupComponent,
     DashboardComponent,
-    ProfileComponent,
     NotesComponent,
     NotesTemplateComponent,
     NavbarComponent,
     ForgotPasswordComponent,
-    FooterComponent
+    FooterComponent,
+    NavbarDetailsComponent,
+    NavbarToggleComponent,
+    SpecificNoteComponent,
+    AddNoteComponent,
+    DeleteDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -53,6 +63,7 @@ import { FooterComponent } from './components/footer/footer.component';
     // NgIf,
     NgbModule,
     BrowserAnimationsModule,
+
     // MaterialUI Modules imports
     MatCardModule,
     MatInputModule,
@@ -61,6 +72,8 @@ import { FooterComponent } from './components/footer/footer.component';
     MatDividerModule,
     MatIconModule,
     MatSlideToggleModule,
+    MatMenuModule,
+    MatDialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
